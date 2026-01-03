@@ -82,7 +82,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   //chack user created or not
   if (!createdUser) {
-    throw new apiError(500, "error by while registring user");
+    throw new apiError(500, "error while registring user");
   }
   //   console.log(createdUser);
 
@@ -94,10 +94,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
     // get data from frontend
-    const { username, email, password } = req.body;
-
+    const { email, username, password } = req.body;
+    console.log("data is the : ",req.body);
     // validation of data
-    if (!username || !email){
+    if (!username && !email){
         throw new apiError(400, "username or email is required");
     }
 
@@ -110,7 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     // chack password
-    const passwordValidate = await user.ispasswordCorrect(password);
+    const passwordValidate = await user.isPasswordCorrect(password);
     if(!passwordValidate){
         throw new apiError(401, "invalid password");
     }
@@ -123,7 +123,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true
+        secure: process.env.NODE_ENV
     }
 
     return res
@@ -144,10 +144,10 @@ const logoutUser = asyncHandler(async (req, res) =>{
     try {
        await User.findByIdAndUpdate(req.user._id,
             {
-                $set: {refreshToken: null}
+              $set: {refreshToken: null}
             },
             {
-                new: true,
+              new: true,
             }
         )
         const options = {
