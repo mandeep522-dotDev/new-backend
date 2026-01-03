@@ -22,6 +22,6 @@ router.route('/login').post(loginUser);
 
 // secured routes can be added here
 router.route('/logout').post(verifyJWT, logoutUser);
-router.route('/refresh-token').get(refresAccessToken);
+router.route('/refresh-token').post(refresAccessToken);
 
 export default router;
