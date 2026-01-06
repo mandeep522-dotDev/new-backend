@@ -269,14 +269,20 @@ const updeateUserDetails = asyncHandler(async (req, res) => {
     {
       new: true,
     }
-  ).select("-password -refreshtoken");
+  ).select("-password -refreshToken");
 
   if (!updeatedUser) {
     throw new apiError(500, "error while updating user details");
   }
   return res
     .status(200)
-    .json(200, updeatedUser, "user details updated successfully");
+    .json(
+      new apiResponce(
+        200,
+        updeatedUser, 
+        "user details updated successfully"
+      )
+    );
 });
 
 const changeUserAvatar = asyncHandler(async (req, res) => {
@@ -303,7 +309,7 @@ const changeUserAvatar = asyncHandler(async (req, res) => {
       },
     },
     { new: true }
-  ).select("-password");
+  ).select("-password -refreshToken");
 
   return res
     .status(200)
@@ -415,7 +421,7 @@ const getWatchedHistory = asyncHandler(async (req, res) => {
   const user = await User.aggregate([
     {
       $match: {
-        _id: mongoose.Types.ObjectId(req.user?._id),
+        _id: new mongoose.Types.ObjectId(req.user?._id),
       },
     },
     {
